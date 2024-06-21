@@ -24,12 +24,6 @@ async Task SendTcpMessage(byte[] data)
 
     await Task.Delay(10);
 
-    //var data2 = new byte[256];
-
-    //await stream.ReadAsync(data2, 0, data2.Length, CancellationToken.None);
-
-    //Console.WriteLine(Encoding.ASCII.GetString(data2));
-
     Console.ReadKey();
 }
 

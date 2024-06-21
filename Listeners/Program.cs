@@ -19,7 +19,6 @@ Console.CancelKeyPress += (sender, e) =>
 
 await UdpReceiver.ReceiveMessagesAsync();
 
-
 async Task StartTcpListener()
 {
     try
@@ -34,17 +33,6 @@ async Task StartTcpListener()
 
         var message = Encoding.UTF8.GetString(buffer, 0, received);
         Console.WriteLine($"Message received: \"{message}\"");
-
-        //var data = Encoding.ASCII.GetBytes("hello");
-
-        //var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(25));
-
-        //if (cts.IsCancellationRequested)
-        //{
-        //    cts.Cancel();
-        //}
-
-        //await stream.WriteAsync(data, 0, data.Length, CancellationToken.None);
     }
     catch (Exception ex)
     {
