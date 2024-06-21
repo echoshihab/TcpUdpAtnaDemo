@@ -9,7 +9,16 @@ using Listener.Udp;
 
 var tcpListener = new TcpListener(IPAddress.Loopback, 11514);
 //await StartTcpListener();
-StartUdpReceiver();
+//StartUdpReceiver();
+
+Console.CancelKeyPress += (sender, e) =>
+{
+    e.Cancel = true; 
+    UdpReceiver.StopReceiver();
+};
+
+await UdpReceiver.ReceiveMessagesAsync();
+
 
 async Task StartTcpListener()
 {
@@ -45,6 +54,6 @@ async Task StartTcpListener()
 
 void StartUdpReceiver()
 {
-    AsyncCallbackReceiver.ReceiveMessages();
+    AsyncCallbackUdpReceiver.ReceiveMessages();
 }
 

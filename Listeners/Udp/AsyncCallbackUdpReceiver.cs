@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Listener.Udp
 {
-    public static class AsyncCallbackReceiver
+    public static class AsyncCallbackUdpReceiver
     {
         private static bool messageReceived;
         public static void ReceiveCallback(IAsyncResult asyncResult)
