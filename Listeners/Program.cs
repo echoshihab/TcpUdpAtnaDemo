@@ -4,11 +4,12 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Listener.Udp;
 
 
 var tcpListener = new TcpListener(IPAddress.Loopback, 11514);
-await StartTcpListener();
-
+//await StartTcpListener();
+StartUdpReceiver();
 
 async Task StartTcpListener()
 {
@@ -42,23 +43,8 @@ async Task StartTcpListener()
     }
 }
 
+void StartUdpReceiver()
+{
+    AsyncCallbackReceiver.ReceiveMessages();
+}
 
-//async Task StartUdpListener()
-//{
-//    var listerEndpoint = new IPEndPoint(IPAddress.Loopback, 514);
-//    var udpClient = new UdpClient(listerEndpoint);
-
-//    udpClient.BeginReceive(new AsyncCallback(ReceiveCallBack), )
-//}
-
-//struct UdpState
-//{
-//    public UdpClient UdpClient { get; set; }
-//    public IPEndPoint IpEndPoint { get; set; }
-//}
-//void ReceiveCallBack(IAsyncResult asyncResult)
-//{
-//    var udpClient = asyncResult.AsyncState;
-//}
-
-// add UDP Listener

@@ -6,7 +6,8 @@ using System.Net.Sockets;
 
 var data = await File.ReadAllBytesAsync(@"C:\audits\sample_audit2.txt");
 
-await SendTcpMessage(data);
+//await SendTcpMessage(data);
+await SendUdpMessage(data);
 
 async Task SendTcpMessage(byte[] data)
 {
@@ -33,7 +34,7 @@ async Task SendTcpMessage(byte[] data)
 }
 
 
-async Task SendUdpMessage()
+async Task SendUdpMessage(byte[] data)
 {
     var client = new UdpClient();
     var endpoint = new IPEndPoint(IPAddress.Loopback, 514);
