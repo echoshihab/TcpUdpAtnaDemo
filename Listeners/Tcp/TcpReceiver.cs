@@ -17,10 +17,17 @@ namespace Listener.Tcp
                 using var handler = await _tcpListener.AcceptTcpClientAsync();
                 await using var stream = handler.GetStream();
 
-                var buffer = new byte[1_024];
-                int received = await stream.ReadAsync(buffer);
 
-                var message = Encoding.UTF8.GetString(buffer, 0, received);
+                //with continuous 
+                var message = await ContinuouslyReadStreamByBufferSizeAsync(new byte[10], stream);
+
+                //var message = await ReadyStreamByStreamReaderAsync(stream);
+
+                // the following doesn't require sender to close connection because of the stream.ReadAsync returns immediately at presence of any data with assigned buffer size
+                //var buffer = new byte[1_024];
+                //int received = await stream.ReadAsync(buffer);
+                //var message = Encoding.UTF8.GetString(buffer, 0, received);
+
                 Console.WriteLine($"Message received: \"{message}\"");
             }
             catch (Exception ex)
@@ -30,7 +37,7 @@ namespace Listener.Tcp
         }
 
 
-        private static async Task<string> ContinuouslyReadStreamByBufferSizeAsync(byte[] buffer, NetworkStream stream)
+        private static async Task<string> ContinuouslyReadStreamByBufferSizeAsync(byte[] buffer, Stream stream)
         {
             using var memoryStream = new MemoryStream();
 
@@ -42,5 +49,12 @@ namespace Listener.Tcp
             return Encoding.UTF8.GetString(memoryStream.ToArray());
         }
 
+
+        private static async Task<string> ReadStreamByStreamReaderAsync(Stream stream)
+        {
+            using var streamReader = new StreamReader(stream, Encoding.UTF8);
+            var message= await streamReader.ReadToEndAsync();
+            return message;
+        }
     }
 }
