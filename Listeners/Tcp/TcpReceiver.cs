@@ -29,5 +29,18 @@ namespace Listener.Tcp
             }
         }
 
+
+        private static async Task<string> ContinuouslyReadStreamByBufferSizeAsync(byte[] buffer, NetworkStream stream)
+        {
+            using var memoryStream = new MemoryStream();
+
+            while ((await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            {
+                await memoryStream.WriteAsync(buffer);
+            }
+
+            return Encoding.UTF8.GetString(memoryStream.ToArray());
+        }
+
     }
 }
