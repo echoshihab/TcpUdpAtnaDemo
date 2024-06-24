@@ -6,13 +6,14 @@ using System.Net.Sockets;
 
 var data = await File.ReadAllBytesAsync(@"C:\audits\sample_audit2.txt");
 
-//await SendTcpMessage(data);
-await SendUdpMessage(data);
+await SendTcpMessage(data);
+//await SendUdpMessage(data);
 
 async Task SendTcpMessage(byte[] data)
 {
 
     var tcpEndpoint = new IPEndPoint(IPAddress.Loopback, 11514);
+    
     using var tcpClient = new TcpClient();
     await tcpClient.ConnectAsync(tcpEndpoint);
 
@@ -23,6 +24,8 @@ async Task SendTcpMessage(byte[] data)
     Console.WriteLine($"Audit sent to: {tcpEndpoint.Address}");
 
     await Task.Delay(10);
+
+    tcpClient.Close(); // need this if the receiver is receiving data in continuous manner
 
     Console.ReadKey();
 }
