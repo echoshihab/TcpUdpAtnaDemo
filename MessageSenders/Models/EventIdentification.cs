@@ -1,19 +1,21 @@
 ﻿using System.Xml.Serialization;
+using MessageSender.Enums;
 
 namespace MessageSender.Models;
 
 public class EventIdentification
 {
     [XmlElement]
-    public EventId EventID { get; set; }
+    public CodedValueType EventID { get; set; }
     [XmlElement]
-    public EventTypeCode EventTypeCode { get; set; }
+    public CodedValueType EventTypeCode { get; set; }
     [XmlAttribute]
-    public string EventActionCode { get; set; }
+    public EventActionCode EventActionCode { get; set; }
     [XmlAttribute]
     public DateTime EventDateTime { get; set; }
     [XmlAttribute]
-    public string EvenOutcomeIndicator { get; set; }
+    public EventOutcomeIndicator EvenOutcomeIndicator { get; set; }
     [XmlElement]
-    public string EventOutcomDescription { get; set; }
+    public string? EventOutcomeDescription { get; set; }
+    private bool ShouldSerializeEventOutcomeDescription() => !string.IsNullOrEmpty(this.EventOutcomeDescription);
 }

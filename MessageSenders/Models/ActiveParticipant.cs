@@ -1,13 +1,14 @@
 ﻿using System.Xml.Serialization;
+using MessageSender.Enums;
 
 namespace MessageSender.Models;
 
 public class ActiveParticipant
 {
     [XmlElement]
-    public RoleIdCode RoleIDCode { get; set; }
+    public CodedValueType RoleIDCode { get; set; }
     [XmlElement]
-    public MediaIdentifier MediaIdentifier { get; set; }
+    public MediaIdentifier? MediaIdentifier { get; set; }
     [XmlAttribute]
     public string UserID { get; set; }
     [XmlAttribute]
@@ -17,7 +18,13 @@ public class ActiveParticipant
     [XmlAttribute]
     public bool UserIsRequester { get; set; }
     [XmlAttribute]
-    public string NetworkAccessPointID { get; set; }
+    public string? NetworkAccessPointID { get; set; }
     [XmlAttribute]
-    public string NetworkAccessPointTypeCode { get; set; }
+    public NetworkAccessPointTypeCode? NetworkAccessPointTypeCode { get; set; }
+
+    private bool ShouldSerializeNetworkAccessPointID() => NetworkAccessPointID != null;
+    private bool ShouldSerializeNetworkAccessPointTypeCode() => this.NetworkAccessPointID != null && this.NetworkAccessPointTypeCode != null;
+
+    private bool ShouldSerializeMediaIdentifier() => this.MediaIdentifier != null;
+
 }

@@ -12,5 +12,5 @@ public class AuditSourceIdentification
     [XmlAttribute]
     public string AuditSourceId { get; set; }
     [XmlElement]
-    public string AuditSourceTypeCode { get; set; }
+    public CodedValueType AuditSourceTypeCode { get; set; }
 }
