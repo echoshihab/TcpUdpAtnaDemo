@@ -2,11 +2,21 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using MessageSender;
 
 
-var data = await File.ReadAllBytesAsync(@"C:\audits\sample_audit2.txt");
 
-await SendTcpMessage(data);
+var auditMessage = AuditMessageUtil.GenerateAuditMessage(AuditMessageUtil.CreateAuditMessageForUserAuth);
+
+var syslogMessage = SyslogMessageUtil.EncapsulateMessageWithSyslogHeader(auditMessage, ApplicationConstants.SYSLOG_SECURITY_AUTH_FACILITY_CODE, ApplicationConstants.SYSLOG_SEVERITY_AUTHORIZATION);
+
+if (syslogMessage != null)
+{
+    await SendTcpMessage(Encoding.ASCII.GetBytes(syslogMessage));
+}
+
+
 //await SendUdpMessage(data);
 
 async Task SendTcpMessage(byte[] data)
@@ -29,7 +39,6 @@ async Task SendTcpMessage(byte[] data)
 
     Console.ReadKey();
 }
-
 
 async Task SendUdpMessage(byte[] data)
 {
