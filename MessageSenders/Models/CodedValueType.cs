@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 using System.Xml.Serialization;
 
 namespace MessageSender.Models;
 
 public class CodedValueType
 {
+
+    private string _csdCode;
+    private string? _codeSystemName;
+    private string? _originalText;
     public CodedValueType()
     {
         
@@ -20,7 +23,11 @@ public class CodedValueType
     public Enum Code { get; set; }
 
     [XmlAttribute("csd-code")]
-    public string CsdCode => this.Code.ToString();
+    public string CsdCode
+    {
+        get => this.Code.ToString();
+        set => this._csdCode = value; 
+    }
 
     [XmlAttribute("codeSystemName")]
     public string? CodeSystemName
@@ -32,6 +39,7 @@ public class CodedValueType
             var fieldInfo = enumType.GetField(enumValueName);
             return fieldInfo != null ? fieldInfo.GetCustomAttribute<CategoryAttribute>()?.Category : null;
         }
+        set => this._codeSystemName = value;
     }
 
     [XmlAttribute("displayName")]
@@ -46,5 +54,7 @@ public class CodedValueType
             var fieldInfo = enumType.GetField(enumValueName);
             return fieldInfo != null ? fieldInfo.GetCustomAttribute<DescriptionAttribute>()?.Description : null;
         }
+        set => this._originalText = value;
     }
+
 }
