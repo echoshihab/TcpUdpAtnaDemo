@@ -20,9 +20,9 @@ public class ActiveParticipant
     [XmlAttribute]
     public string? NetworkAccessPointID { get; set; }
     [XmlAttribute]
-    public NetworkAccessPointTypeCode? NetworkAccessPointTypeCode { get; set; }
+    public NetworkAccessPointTypeCode NetworkAccessPointTypeCode { get; set; }
 
-    private bool ShouldSerializeNetworkAccessPointID() => NetworkAccessPointID != null;
+    private bool ShouldSerializeNetworkAccessPointID() => this.NetworkAccessPointTypeCode != Enums.NetworkAccessPointTypeCode.None;
     private bool ShouldSerializeNetworkAccessPointTypeCode() => this.NetworkAccessPointID != null && this.NetworkAccessPointTypeCode != null;
 
     private bool ShouldSerializeMediaIdentifier() => this.MediaIdentifier != null;
