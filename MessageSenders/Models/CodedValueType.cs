@@ -1,36 +1,50 @@
 ﻿using System.ComponentModel;
-using System.Dynamic;
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Serialization;
 
 namespace MessageSender.Models;
 
 public class CodedValueType
 {
+    public CodedValueType()
+    {
+        
+    }
     public CodedValueType(Enum csdCode)
     {
-        this.CsdCode = csdCode;
+        this.Code = csdCode;
     }
+    
+    [XmlIgnore]
+    public Enum Code { get; set; }
+
     [XmlAttribute("csd-code")]
-    public Enum CsdCode { get; set; }
+    public string CsdCode => this.Code.ToString();
 
     [XmlAttribute("codeSystemName")]
-    public string? CodeSystemName {
+    public string? CodeSystemName
+    {
         get
         {
-            var categoryAttribute = TypeDescriptor.GetProperties(this)[nameof(this.CsdCode)]?.Attributes[typeof(CategoryAttribute)];
-            return ((CategoryAttribute)categoryAttribute)?.Category;
+            var enumType = this.Code.GetType();
+            var enumValueName = Enum.GetName(this.Code.GetType(), this.Code) ?? string.Empty;
+            var fieldInfo = enumType.GetField(enumValueName);
+            return fieldInfo != null ? fieldInfo.GetCustomAttribute<CategoryAttribute>()?.Category : null;
         }
-}
+    }
 
-[XmlAttribute("displayName")]
+    [XmlAttribute("displayName")]
     public string? DisplayName { get; set; }
     [XmlAttribute("originalText")]
     public string? OriginalText 
     {
         get
         {
-            var descriptionAttribute = TypeDescriptor.GetProperties(this)[nameof(this.CsdCode)]?.Attributes[typeof(DescriptionAttribute)];
-            return ((DescriptionAttribute)descriptionAttribute)?.Description;
+            var enumType = this.Code.GetType();
+            var enumValueName = Enum.GetName(this.Code.GetType(), this.Code) ?? string.Empty;
+            var fieldInfo = enumType.GetField(enumValueName);
+            return fieldInfo != null ? fieldInfo.GetCustomAttribute<DescriptionAttribute>()?.Description : null;
         }
     }
 }
