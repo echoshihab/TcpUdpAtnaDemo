@@ -1,9 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.ComponentModel.Design;
+using MessageSender;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using MessageSender;
 
 
 
@@ -11,13 +12,21 @@ var auditMessage = AuditMessageUtil.GenerateAuditMessage(AuditMessageUtil.Create
 
 var syslogMessage = SyslogMessageUtil.EncapsulateMessageWithSyslogHeader(auditMessage, ApplicationConstants.SYSLOG_SECURITY_AUTH_FACILITY_CODE, ApplicationConstants.SYSLOG_SEVERITY_AUTHORIZATION);
 
-if (syslogMessage != null)
+var data = Encoding.ASCII.GetBytes(syslogMessage);
+
+if (args.Length == 0 || string.Equals("tcp", args[0], StringComparison.InvariantCultureIgnoreCase))
 {
-    await SendTcpMessage(Encoding.ASCII.GetBytes(syslogMessage));
+    await SendTcpMessage(data);
+} 
+else if (string.Equals("udp", args[0], StringComparison.InvariantCultureIgnoreCase))
+{
+    await SendUdpMessage(data);
 }
-
-
-//await SendUdpMessage(data);
+else
+{
+    Console.WriteLine("Invalid argument(s)");
+    Console.ReadKey();
+}
 
 async Task SendTcpMessage(byte[] data)
 {
