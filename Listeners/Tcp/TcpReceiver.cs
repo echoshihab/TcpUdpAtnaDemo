@@ -1,12 +1,14 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using Listener.Validator;
 
 namespace Listener.Tcp
 {
     public static class TcpReceiver
     {
         private static TcpListener _tcpListener;
+        private static AuditMessageValidator _validator = new AuditMessageValidator();
         public static async Task StartTcpListenerAsync()
         {
             try
@@ -28,14 +30,18 @@ namespace Listener.Tcp
                 //int received = await stream.ReadAsync(buffer);
                 //var message = Encoding.UTF8.GetString(buffer, 0, received);
 
+                if (!_validator.ValidateAuditMessage(message))
+                {
+                    Console.WriteLine("The following audit message is invalid");
+                }
                 Console.WriteLine($"Message received: \"{message}\"");
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-
 
         private static async Task<string> ContinuouslyReadStreamByBufferSizeAsync(byte[] buffer, Stream stream)
         {
