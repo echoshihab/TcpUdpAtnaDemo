@@ -3,21 +3,21 @@ using System.Net.Sockets;
 
 namespace Listener.Udp
 {
-    public static class UdpReceiver
+    public class UdpReceiver : IReceiver
     {
-        private static CancellationTokenSource _tokenSource;
-        private static UdpClient _client;
+        private CancellationTokenSource? tokenSource;
+        private UdpClient? client;
 
-        public static async Task ReceiveMessagesAsync()
+        public async Task ReceiveMessagesAsync()
         {
-            _client = new UdpClient(new IPEndPoint(IPAddress.Loopback, 514));
-            _tokenSource = new CancellationTokenSource();
+            this.client = new UdpClient(new IPEndPoint(IPAddress.Loopback, 514));
+            this.tokenSource = new CancellationTokenSource();
 
             try
             {
-                while (!_tokenSource.Token.IsCancellationRequested)
+                while (!this.tokenSource.Token.IsCancellationRequested)
                 {
-                    var udpReceivedResult = await _client.ReceiveAsync(_tokenSource.Token);
+                    var udpReceivedResult = await this.client.ReceiveAsync(this.tokenSource.Token);
 
                     var receivedMessage = System.Text.Encoding.UTF8.GetString(udpReceivedResult.Buffer);
 
@@ -32,11 +32,11 @@ namespace Listener.Udp
             }
         }
 
-        public static void StopReceiver()
+        public void StopReceiver()
         {
             Console.WriteLine("Stopping Receiver via cancelling token.");
-            _tokenSource.Cancel();
-            _client.Close();
+            this.tokenSource?.Cancel();
+            this.client?.Close();
         }
     }
 }

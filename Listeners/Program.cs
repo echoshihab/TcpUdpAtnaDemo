@@ -6,13 +6,15 @@ using Listener.Udp;
 
 
 
-Console.CancelKeyPress += (sender, e) =>
-{
-    e.Cancel = true; 
-    UdpReceiver.StopReceiver();
-};
+//Console.CancelKeyPress += (sender, e) =>
+//{
+//    e.Cancel = true; 
+//    UdpReceiver.StopReceiver();
+//};
 
-await UdpReceiver.ReceiveMessagesAsync();
-//await TcpReceiver.StartTcpListenerAsync();
+//var udpReceiver  = new UdpReceiver();
+//await udpReceiver.ReceiveMessagesAsync();
 
+var tcpReceiver = new TcpReceiver();
+await tcpReceiver.ReceiveMessagesAsync();
 

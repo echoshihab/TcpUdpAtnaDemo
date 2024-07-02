@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.ComponentModel.Design;
 using MessageSender;
 using System.Net;
 using System.Net.Sockets;
