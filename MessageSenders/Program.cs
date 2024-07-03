@@ -15,10 +15,12 @@ var data = Encoding.ASCII.GetBytes(syslogMessage);
 
 if (args.Length == 0 || string.Equals("tcp", args[0], StringComparison.InvariantCultureIgnoreCase))
 {
+    Console.WriteLine("Sending Message via TCP");
     await SendTcpMessage(data);
 } 
 else if (string.Equals("udp", args[0], StringComparison.InvariantCultureIgnoreCase))
 {
+    Console.WriteLine("Sending Message via UDP");
     await SendUdpMessage(data);
 }
 else

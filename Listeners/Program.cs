@@ -15,8 +15,8 @@ else if (string.Equals("udp", args[0], StringComparison.InvariantCultureIgnoreCa
 
     Console.CancelKeyPress += (sender, e) =>
     {
-    e.Cancel = true;
-    udpReceiver.StopReceiver();
+        e.Cancel = true;
+        udpReceiver.StopReceiver();
     };
     await udpReceiver.ReceiveMessagesAsync();
 }

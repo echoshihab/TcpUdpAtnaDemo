@@ -34,7 +34,7 @@ namespace Listener.Udp
 
         public void StopReceiver()
         {
-            Console.WriteLine("Stopping Receiver via cancelling token.");
+            Console.WriteLine("Stopping UDP receiver via cancellation token.");
             this.tokenSource?.Cancel();
             this.client?.Close();
         }

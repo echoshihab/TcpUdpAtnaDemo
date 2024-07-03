@@ -19,18 +19,16 @@ namespace Listener.Tcp
                 using var handler = await this.tcpListener.AcceptTcpClientAsync();
                 await using var stream = handler.GetStream();
 
-
-                //with continuous 
                 var message = await this.ContinuouslyReadStreamByBufferSizeAsync(new byte[10], stream);
 
-                //var message = await ReadyStreamByStreamReaderAsync(stream);
+                //alternate - var message = await ReadyStreamByStreamReaderAsync(stream);
 
                 if (!this.validator.ValidateAuditMessage(message))
                 {
                     Console.WriteLine("The following audit message is invalid");
                 }
-                Console.WriteLine($"Message received: \"{message}\"");
 
+                Console.WriteLine($"Message received: \"{message}\"");
             }
             catch (Exception ex)
             {
