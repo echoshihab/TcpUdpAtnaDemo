@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MessageSender": {
+      "commandName": "Project",
+      "commandLineArgs": "tcp"
+    }
+  }
+}
