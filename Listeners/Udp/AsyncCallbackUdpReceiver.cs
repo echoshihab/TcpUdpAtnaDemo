@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Listener.Udp
 {
-    public static class AsyncCallbackUdpReceiver
+    public  class AsyncCallbackUdpReceiver
     {
-        private static bool messageReceived;
-        public static void ReceiveCallback(IAsyncResult asyncResult)
+        private bool messageReceived;
+        public void ReceiveCallback(IAsyncResult asyncResult)
         {
             var udpClient = ((UdpState)(asyncResult.AsyncState)).UdpClient;
             var ipEndpoint = ((UdpState)(asyncResult.AsyncState)).IpEndPoint;
@@ -16,10 +16,10 @@ namespace Listener.Udp
             var receiveString = Encoding.ASCII.GetString(receiveBytes);
 
             Console.WriteLine($"Received {receiveString}");
-            messageReceived = true;
+            this.messageReceived = true;
         }
         
-        public static void ReceiveMessages()
+        public void ReceiveMessages()
         {
             var listerEndpoint = new IPEndPoint(IPAddress.Loopback, 514);
             var udpClient = new UdpClient(listerEndpoint);
@@ -32,7 +32,7 @@ namespace Listener.Udp
 
             udpClient.BeginReceive(new AsyncCallback(ReceiveCallback), udpState);
 
-            while (!messageReceived)
+            while (!this.messageReceived)
             {
                 Thread.Sleep(100);
             }

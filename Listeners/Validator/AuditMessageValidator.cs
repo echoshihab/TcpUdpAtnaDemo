@@ -10,7 +10,7 @@ namespace Listener.Validator
     {
         public bool ValidateAuditMessage(string auditMessage)
         {
-            return auditMessage.Contains(@"<AuditMessage>");
+            return auditMessage.Contains(@"<AuditMessage");
         }
     }
 }

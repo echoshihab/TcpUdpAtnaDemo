@@ -31,11 +31,12 @@ else
 
 async Task SendTcpMessage(byte[] data)
 {
-
     var tcpEndpoint = new IPEndPoint(IPAddress.Loopback, 11514);
     
     using var tcpClient = new TcpClient();
     await tcpClient.ConnectAsync(tcpEndpoint);
+
+    // alternate await tcpClient.ConnectAsync("localhost", 11514);
 
     var stream = tcpClient.GetStream();
 

@@ -18,7 +18,12 @@ else if (string.Equals("udp", args[0], StringComparison.InvariantCultureIgnoreCa
         e.Cancel = true;
         udpReceiver.StopReceiver();
     };
+
     await udpReceiver.ReceiveMessagesAsync();
+
+    // Alternate async callback way
+    // var asyncCallbackUdpReceiver = new AsyncCallbackUdpReceiver();
+    // asyncCallbackUdpReceiver.ReceiveMessages();
 }
 else
 {
