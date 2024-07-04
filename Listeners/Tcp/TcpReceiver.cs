@@ -21,7 +21,8 @@ namespace Listener.Tcp
 
                 var message = await this.ContinuouslyReadStreamByBufferSizeAsync(new byte[10], stream);
 
-                //alternate - var message = await ReadyStreamByStreamReaderAsync(stream);
+                //alternate
+                //var message = await this.ReadStreamByStreamReaderAsync(stream);
 
                 if (!this.validator.ValidateAuditMessage(message))
                 {
@@ -40,9 +41,10 @@ namespace Listener.Tcp
         {
             using var memoryStream = new MemoryStream();
 
-            while ((await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            int bytesRead;
+            while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
-                await memoryStream.WriteAsync(buffer);
+                await memoryStream.WriteAsync(buffer, 0, bytesRead);
             }
 
             return Encoding.UTF8.GetString(memoryStream.ToArray());
