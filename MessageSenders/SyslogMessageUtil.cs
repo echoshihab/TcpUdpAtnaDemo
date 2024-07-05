@@ -37,9 +37,8 @@ namespace MessageSender
             // unable to create structured data due to absence of IANA private enterprise number required for SD-ID
             var structuredData = "-"; //- represents NILVALUE https://datatracker.ietf.org/doc/html/rfc5424#section-7.2.2
 
-            return $"{pri}{version} {timestamp} {hostName} {appName} {procid} {msgId} {structuredData} BOM{auditMessage}";
+            return $"<{pri}>{version} {timestamp} {hostName} {appName} {procid} {msgId} {structuredData} {auditMessage}";
         } // log audit
-
 
     }
 }
