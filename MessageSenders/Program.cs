@@ -45,12 +45,12 @@ async Task SendTcpMessage(byte[] data)
 
     try
     {
-        var clientCertificate = new X509Certificate("c:\\localhostCert\\localhost.pfx", "Password1!");
+        var clientCertificate = new X509Certificate("c:\\certs\\client\\client.pfx", "Password1!");
         var clientCertificates = new X509CertificateCollection
         {
             clientCertificate
         };
-        await sslStream.AuthenticateAsClientAsync("localhost", clientCertificates, true);
+        await sslStream.AuthenticateAsClientAsync("D02962.DBRI.LOCAL", clientCertificates, true);
     }
     catch (AuthenticationException e)
     {

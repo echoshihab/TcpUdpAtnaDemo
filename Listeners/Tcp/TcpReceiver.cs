@@ -17,7 +17,7 @@ namespace Listener.Tcp
         {
             try
             {
-                this.serverCertificate = new X509Certificate("c:\\localhostCert\\localhost.pfx", "Password1!");
+                this.serverCertificate = new X509Certificate("c:\\certs\\server\\server.pfx", "Password1!");
                 this.tcpListener = new TcpListener(IPAddress.Loopback, 11514);
                 this.tcpListener.Start();
 
