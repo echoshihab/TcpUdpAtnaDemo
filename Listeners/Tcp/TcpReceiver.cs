@@ -1,5 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Listener.Validator;
 
@@ -9,18 +11,23 @@ namespace Listener.Tcp
     {
         private TcpListener? tcpListener;
         private readonly AuditMessageValidator validator = new AuditMessageValidator();
+        private X509Certificate serverCertificate;
+
         public async Task ReceiveMessagesAsync()
         {
             try
             {
+                this.serverCertificate = X509Certificate.CreateFromCertFile("c:\\localhostCert\\localhost.pfx");
                 this.tcpListener = new TcpListener(IPAddress.Loopback, 11514);
                 this.tcpListener.Start();
 
                 using var handler = await this.tcpListener.AcceptTcpClientAsync();
                 await using var stream = handler.GetStream();
+                await using var sslStream = new SslStream(stream, false);
+
+                await sslStream.AuthenticateAsServerAsync(this.serverCertificate, true,true );
 
                 var message = await this.ContinuouslyReadStreamByBufferSizeAsync(new byte[10], stream);
-
                 //alternate
                 //var message = await this.ReadStreamByStreamReaderAsync(stream);
 
