@@ -2,7 +2,10 @@
 
 using MessageSender;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 
@@ -37,7 +40,32 @@ async Task SendTcpMessage(byte[] data)
 
     // alternate await tcpClient.ConnectAsync("localhost", 11514);
 
-    var stream = tcpClient.GetStream();
+    await using var stream = tcpClient.GetStream();
+    await using var sslStream = new SslStream(stream, false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+
+    try
+    {
+        var clientCertificate = new X509Certificate("c:\\localhostCert\\localhost.pfx", "Password1!");
+        var clientCertificates = new X509CertificateCollection
+        {
+            clientCertificate
+        };
+        await sslStream.AuthenticateAsClientAsync("localhost", clientCertificates, true);
+    }
+    catch (AuthenticationException e)
+    {
+        Console.WriteLine("Exception: {0}", e.Message);
+
+        if (e.InnerException != null)
+        {
+            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+        }
+
+        Console.WriteLine ("Authentication failed - closing the connection.");
+        tcpClient.Close();
+
+        return;
+    }
 
     await stream.WriteAsync(data, 0, data.Length);
 
@@ -48,6 +76,13 @@ async Task SendTcpMessage(byte[] data)
     tcpClient.Close(); // need this if the receiver is receiving data in continuous manner
 
     Console.ReadKey();
+}
+
+bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+{
+    if (sslPolicyErrors == SslPolicyErrors.None)
+        return true;
+    return false;
 }
 
 async Task SendUdpMessage(byte[] data)
